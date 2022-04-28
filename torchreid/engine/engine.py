@@ -8,12 +8,12 @@ import torch
 from torch.nn import functional as F
 from torch.utils.tensorboard import SummaryWriter
 
-from torchreid import metrics
-from torchreid.utils import (
+from deep_sort.deep.reid.torchreid import metrics
+from deep_sort.deep.reid.torchreid.utils import (
     MetricMeter, AverageMeter, re_ranking, open_all_layers, save_checkpoint,
     open_specified_layers, visualize_ranked_results
 )
-from torchreid.losses import DeepSupervision
+from deep_sort.deep.reid.torchreid.losses import DeepSupervision
 
 
 class Engine(object):
@@ -367,10 +367,10 @@ class Engine(object):
                 end = time.time()
                 features = self.extract_features(imgs)
                 batch_time.update(time.time() - end)
-                features = features.cpu().clone()
+                features = features.cpu()
                 f_.append(features)
-                pids_.extend(pids)
-                camids_.extend(camids)
+                pids_.extend(pids.tolist())
+                camids_.extend(camids.tolist())
             f_ = torch.cat(f_, 0)
             pids_ = np.asarray(pids_)
             camids_ = np.asarray(camids_)
